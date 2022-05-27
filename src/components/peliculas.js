@@ -1,7 +1,62 @@
 import React, { useState, useEffect } from "react";
 import { FormattedMessage } from "react-intl";
 import Pelicula from "./pelicula";
+import * as d3 from "https://cdn.skypack.dev/d3@7";
 
+
+function graph(data) {
+
+    const canvas = d3.select("#canvas");
+
+
+    const width = 800;
+    const height = 500;
+    const margin = { top: 10, left: 100, bottom: 40, right: 10 };
+    const iwidth = width - margin.left - margin.right;
+    const iheight = height - margin.top - margin.bottom;
+
+    const svg = canvas.append("svg");
+
+    svg.attr("width", width);
+    svg.attr("height", height);
+    let g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+
+
+
+    const y = d3.scaleLinear()
+
+        .domain([0,10000000])
+        .range([iheight, 0]);
+        
+
+    const x = d3.scaleBand()
+        .domain(data.map(d => d.id))
+        .range([0, iwidth])
+        .padding(0.1);
+
+
+    const bars = g.selectAll("rect").data(data);
+
+    bars.enter().append("rect")
+        .attr("class", "bar")
+        .style("fill", "steelblue")
+        .attr("x", d => x(d.id))
+        .attr("y", d => y(d.views))
+        .attr("height", d =>iheight- y(d.views))
+        .attr("width", x.bandwidth())
+
+    g.append("g")
+        .classed("x--axis", true)
+        .call(d3.axisBottom(x))
+        .attr("transform", `translate(0, ${iheight})`);
+
+    g.append("g")
+        .classed("y--axis", true)
+        .call(d3.axisLeft(y));
+
+
+
+};
 
 const Peliculas = () => {
     let url;
@@ -47,8 +102,9 @@ const Peliculas = () => {
             </div>
         );
     } else {
+        graph(data);
         return (
-            <div class = "col-8">
+            <><div id="pelis" class="col-12">
                 <table className="table table-striped">
                     <thead>
                         <tr>
@@ -68,7 +124,9 @@ const Peliculas = () => {
                         ))}
                     </tbody>
                 </table>
-            </div>
+                <div id="canvas">
+                </div>
+            </div><div id="card" display="none"></div></>
         )
     }
 };
