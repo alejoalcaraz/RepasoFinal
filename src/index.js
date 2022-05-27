@@ -1,19 +1,19 @@
 import React from "react";
-import {createRoot} from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import {IntlProvider} from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import Peliculas from "./components/peliculas";
 import localeEsMessages from "./locales/es";
 import localeEnMessages from "./locales/en";
 import Ejemplo from "./components/ejemplo";
 
 let lang;
-const getLocale = ()=>{
-    const userLang = navigator.language || navigator.userLanguage;
-    console.log(userLang);
-    lang = userLang;
-    return userLang ==="es" ? localeEsMessages : localeEnMessages;
+const getLocale = () => {
+  const userLang = navigator.language || navigator.userLanguage;
+  console.log(userLang);
+  lang = userLang;
+  return userLang === "es" ? localeEsMessages : localeEnMessages;
 }
 getLocale();
 
@@ -21,9 +21,11 @@ const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 root.render(
   <IntlProvider locale={lang} messages={getLocale()}>
-  <Peliculas />
+    <div class="row">
+      <Peliculas />
+    </div>
   </IntlProvider>
-  );
+);
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
